@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import pytest
 import sys
 from pathlib import Path
+
+import pytest
 
 # Add parent directory to path to import app
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -168,7 +169,7 @@ class TestBootUpScenarios:
         for _ in range(50):
             response = client.get('/')
             responses.append(response.status_code)
-        
+
         assert all(status == 200 for status in responses)
 
     def test_request_response_consistency(self, client):
@@ -177,7 +178,7 @@ class TestBootUpScenarios:
         for _ in range(5):
             response = client.get('/')
             responses.append(response.data)
-        
+
         # All responses should be identical
         assert all(r == responses[0] for r in responses)
 
@@ -287,7 +288,7 @@ class TestGunicornCompatibility:
         # Make requests and verify no state is maintained
         response1 = client.get('/')
         response2 = client.get('/')
-        
+
         assert response1.data == response2.data
         assert response1.status_code == response2.status_code
 
@@ -298,7 +299,7 @@ class TestGunicornCompatibility:
             response = client.get('/')
             # Convert to string for comparison
             responses.add(response.data.decode('utf-8'))
-        
+
         # All responses should be identical
         assert len(responses) == 1
 
@@ -424,7 +425,7 @@ class TestDeploymentReboot:
         for _ in range(5):
             response = client.get('/')
             responses.append(response.data)
-        
+
         # All responses should be identical
         assert all(r == responses[0] for r in responses)
 
@@ -448,7 +449,7 @@ class TestNetworkConfiguration:
         """Verify app response doesn't hardcode port numbers"""
         response = client.get('/')
         content = response.data.decode('utf-8')
-        
+
         # Should not have hardcoded port references that would break deployment
         assert 'localhost:5000' not in content
 
@@ -480,7 +481,7 @@ class TestProductionReadiness:
         start = time.time()
         response = client.get('/')
         elapsed = time.time() - start
-        
+
         assert elapsed < 0.5  # Should respond in less than 500ms
         assert response.status_code == 200
 
@@ -499,6 +500,6 @@ class TestProductionReadiness:
         for _ in range(20):
             response = client.get('/')
             responses.append(response.status_code)
-        
+
         assert all(status == 200 for status in responses)
         assert len(responses) == 20
