@@ -107,7 +107,7 @@ PAGE = """
         </div>
 
         <footer>
-            <p>Deployed by Lokesh | Flask - Gunicorn - Nginx - Linux</p>
+            <p>Deployed by Lokesh Sekar| Flask - Gunicorn - Nginx - Linux</p>
         </footer>
     </div>
 </body>
