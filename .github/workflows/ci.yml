@@ -47,6 +47,17 @@ jobs:
           flags: unittests
           name: codecov-umbrella
 
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ matrix.python-version }}
+          path: |
+            htmlcov/
+            .coverage
+            coverage.xml
+          retention-days: 30
+
   lint:
     name: Code Quality Checks
     runs-on: ubuntu-latest
@@ -75,7 +86,15 @@ jobs:
 
       - name: Lint with Flake8
         run: |
-          flake8 app.py tests/ --max-line-length=100 --ignore=E501,W503
+          flake8 app.py tests/ --max-line-length=100 --ignore=E501,W503 > flake8-report.txt || true
+
+      - name: Upload Lint Reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: lint-reports
+          path: flake8-report.txt
+          retention-days: 30
 
   deploy:
     name: Deploy to EC2
@@ -142,6 +161,14 @@ jobs:
           [ "$response" = "200" ] && echo "✓ App endpoint returns 200" || echo "✗ App endpoint returned $response"
 
           EOF
+
+      - name: Upload Deployment Logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-logs-${{ github.run_id }}
+          path: .
+          retention-days: 30
 
   notify:
     name: Send Notifications
