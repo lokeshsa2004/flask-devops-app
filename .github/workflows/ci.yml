@@ -47,6 +47,12 @@ jobs:
           flags: unittests
           name: codecov-umbrella
 
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: .
+
   lint:
     name: Code Quality Checks
     runs-on: ubuntu-latest
