@@ -165,13 +165,13 @@ jobs:
 
           set -euo pipefail
 
-          IMAGE="ghcr.io/${{ github.repository }}:latest"
-          CONTAINER_NAME="flask-devops-app"
+          REPO_URL="https://github.com/${{ github.repository }}.git"
+          APP_IMAGE="ghcr.io/${{ github.repository }}:latest"
 
           echo "Ensuring Docker is installed..."
           if ! command -v docker >/dev/null 2>&1; then
             sudo apt update
-            sudo apt install -y docker.io
+            sudo apt install -y docker.io docker-compose-plugin git
             sudo systemctl enable --now docker
           fi
 
@@ -182,18 +182,19 @@ jobs:
             echo "GHCR_PAT secret is missing. If the GHCR image is private, pulls will fail."
           fi
 
-          echo "Pulling latest image..."
-          sudo docker pull "$IMAGE"
+          echo "Ensuring compose files exist on VM..."
+          if [ ! -d "$HOME/flask-devops-app/.git" ]; then
+            git clone "$REPO_URL" "$HOME/flask-devops-app"
+          fi
+          cd "$HOME/flask-devops-app"
+          git fetch origin master
+          git reset --hard origin/master
 
-          echo "Replacing running container (if any)..."
-          sudo docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
+          echo "Pulling latest app image..."
+          sudo APP_IMAGE="$APP_IMAGE" docker compose pull flask-app
 
-          echo "Starting container on port 80..."
-          sudo docker run -d \
-            --name "$CONTAINER_NAME" \
-            --restart unless-stopped \
-            -p 80:8000 \
-            "$IMAGE"
+          echo "Starting stack (nginx -> app)..."
+          sudo APP_IMAGE="$APP_IMAGE" docker compose up -d --remove-orphans
 
           echo "Health check..."
           for i in {1..15}; do
@@ -205,7 +206,7 @@ jobs:
           done
 
           echo "✗ App did not become healthy in time"
-          sudo docker logs --tail=200 "$CONTAINER_NAME" || true
+          sudo docker compose logs --tail=200 || true
           exit 1
 
           EOF
@@ -216,9 +217,11 @@ jobs:
 
           echo "Running health checks..."
 
-          # Check container is running
-          sudo docker ps --filter "name=flask-devops-app" --format '{{.Names}}' | grep -q flask-devops-app \
-            && echo "✓ Container is running" || echo "✗ Container is NOT running"
+          # Check containers are running
+          sudo docker ps --filter "name=nginx" --format '{{.Names}}' | grep -q nginx \
+            && echo "✓ Nginx container is running" || echo "✗ Nginx container is NOT running"
+          sudo docker ps --filter "name=flask-app" --format '{{.Names}}' | grep -q flask-app \
+            && echo "✓ App container is running" || echo "✗ App container is NOT running"
 
           # Check app endpoint via port 80
           response=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1/)

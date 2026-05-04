@@ -31,6 +31,23 @@ Open in browser:
 
 `http://localhost:8000`
 
+## Docker Compose (Nginx container + app container)
+
+This repo also supports a 2-container layout:
+
+Browser → **Nginx (container, port 80)** → **Flask+Gunicorn (container, port 8000)**.
+
+Run locally:
+
+```bash
+export APP_IMAGE=flask-devops-app:local
+docker compose up -d
+```
+
+Open:
+
+`http://localhost/`
+
 ## Push image to a registry and pull it elsewhere
 
 Example with Docker Hub:
