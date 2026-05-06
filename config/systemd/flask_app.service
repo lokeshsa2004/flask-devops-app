@@ -6,7 +6,7 @@ After=network.target
 User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/flask_app
-Environment=Path=/home/ubuntu/flask_app/venv/bin"
+Environment="PATH=/home/ubuntu/flask_app/venv/bin"
 ExecStart=/home/ubuntu/flask_app/venv/bin/gunicorn \
 	-w 3 \
 	-b 127.0.0.1:8000 \
