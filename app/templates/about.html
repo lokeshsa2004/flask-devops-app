@@ -1,0 +1,328 @@
+{% extends "base.html" %} {% block title %}About - Flask DevOps App{% endblock
+%} {% block content %}
+<div class="container">
+  <section class="about-hero">
+    <h1>About Flask DevOps App</h1>
+    <p class="lead">
+      A complete guide to deploying Flask applications on production servers
+    </p>
+  </section>
+
+  <section class="about-content">
+    <div class="about-card">
+      <h2>🎯 Mission</h2>
+      <p>
+        This project demonstrates a production-ready Flask application with:
+      </p>
+      <ul>
+        <li>
+          <strong>Scalable Architecture:</strong> Blueprint-based modular design
+        </li>
+        <li>
+          <strong>Database Integration:</strong> SQLAlchemy ORM with MySQL
+        </li>
+        <li>
+          <strong>RESTful APIs:</strong> JSON endpoints for frontend integration
+        </li>
+        <li>
+          <strong>Modern Frontend:</strong> Dynamic JavaScript with form
+          handling
+        </li>
+        <li><strong>DevOps Ready:</strong> Docker, Docker Compose, systemd</li>
+        <li><strong>CI/CD Pipeline:</strong> GitHub Actions automation</li>
+      </ul>
+    </div>
+
+    <div class="about-card">
+      <h2>📚 Technology Stack</h2>
+      <div class="tech-details">
+        <div class="tech-section">
+          <h3>Backend</h3>
+          <ul>
+            <li><strong>Python 3.11</strong> - Modern Python runtime</li>
+            <li><strong>Flask 2.3+</strong> - Lightweight web framework</li>
+            <li><strong>SQLAlchemy</strong> - ORM for database operations</li>
+            <li><strong>Flask-Migrate</strong> - Database migrations</li>
+          </ul>
+        </div>
+        <div class="tech-section">
+          <h3>Database</h3>
+          <ul>
+            <li><strong>MySQL 8.0</strong> - Relational database</li>
+            <li><strong>PyMySQL</strong> - Python MySQL connector</li>
+            <li><strong>Connection Pooling</strong> - For performance</li>
+          </ul>
+        </div>
+        <div class="tech-section">
+          <h3>Server Stack</h3>
+          <ul>
+            <li><strong>Gunicorn</strong> - Production WSGI server</li>
+            <li><strong>Nginx</strong> - Reverse proxy and static files</li>
+            <li><strong>Docker</strong> - Containerization</li>
+            <li><strong>systemd</strong> - Process management</li>
+          </ul>
+        </div>
+        <div class="tech-section">
+          <h3>DevOps & CI/CD</h3>
+          <ul>
+            <li><strong>GitHub Actions</strong> - Automated workflows</li>
+            <li><strong>GHCR</strong> - Container registry</li>
+            <li><strong>AWS EC2</strong> - Cloud deployment target</li>
+            <li><strong>Docker Compose</strong> - Local orchestration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-card">
+      <h2>🏗️ Architecture Overview</h2>
+      <div class="architecture">
+        <div class="arch-layer">
+          <strong>Internet</strong>
+          <p>Users access via public IP or domain</p>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer">
+          <strong>Nginx (Port 80/443)</strong>
+          <p>Reverse proxy, static file serving, SSL termination</p>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer">
+          <strong>Gunicorn (Port 8000)</strong>
+          <p>WSGI server with multiple worker processes</p>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer">
+          <strong>Flask Application</strong>
+          <p>Blueprints, routes, business logic</p>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer">
+          <strong>SQLAlchemy + MySQL</strong>
+          <p>Data persistence and ORM layer</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-card">
+      <h2>🚀 Deployment Options</h2>
+      <div class="deployment-grid">
+        <div class="deployment-option">
+          <h3>🖥️ Bare Metal / VM</h3>
+          <p>
+            <strong>systemd</strong> service + <strong>Nginx</strong> on Ubuntu
+          </p>
+          <p class="small">Best for: Full server control, on-premise</p>
+        </div>
+        <div class="deployment-option">
+          <h3>🐳 Docker Container</h3>
+          <p>Single container with Gunicorn</p>
+          <p class="small">Best for: Quick testing, simple deployments</p>
+        </div>
+        <div class="deployment-option">
+          <h3>🔗 Docker Compose</h3>
+          <p>Nginx + Flask + MySQL stack</p>
+          <p class="small">Best for: Local development, multi-service apps</p>
+        </div>
+        <div class="deployment-option">
+          <h3>☁️ AWS EC2 + GitHub Actions</h3>
+          <p>Automated CI/CD with Docker deployment</p>
+          <p class="small">Best for: Production, continuous delivery</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-card">
+      <h2>📖 Getting Started</h2>
+      <div class="getting-started">
+        <h3>Local Development</h3>
+        <pre><code>python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+gunicorn -w 3 -b 127.0.0.1:8000 app:app</code></pre>
+
+        <h3>Docker Compose</h3>
+        <pre><code>export APP_IMAGE=flask-devops-app:local
+docker compose up -d
+# Open http://localhost/</code></pre>
+
+        <h3>Production on EC2</h3>
+        <pre><code>git clone &lt;repo&gt; flask_app
+cd flask_app
+# Configure secrets in GitHub
+git push origin master
+# Automated deployment via CI/CD</code></pre>
+      </div>
+    </div>
+
+    <div class="about-card">
+      <h2>✅ Features</h2>
+      <div class="features-list">
+        <div class="feature-item">
+          ✓ Full-stack application with frontend & backend
+        </div>
+        <div class="feature-item">
+          ✓ User management system with CRUD operations
+        </div>
+        <div class="feature-item">
+          ✓ RESTful API endpoints for programmatic access
+        </div>
+        <div class="feature-item">
+          ✓ Dynamic JavaScript for real-time updates
+        </div>
+        <div class="feature-item">✓ Database migrations with Flask-Migrate</div>
+        <div class="feature-item">✓ Health checks and monitoring endpoints</div>
+        <div class="feature-item">✓ Comprehensive test suite with pytest</div>
+        <div class="feature-item">✓ Automated CI/CD with GitHub Actions</div>
+        <div class="feature-item">✓ Docker support with multi-stage builds</div>
+        <div class="feature-item">✓ Production-grade security practices</div>
+        <div class="feature-item">✓ Detailed logging and error handling</div>
+        <div class="feature-item">✓ Environment-based configuration</div>
+      </div>
+    </div>
+
+    <div class="about-card cta">
+      <h2>🎓 Learn More</h2>
+      <p>
+        Visit the <strong>Dashboard</strong> to explore the application, view
+        user management, and test the REST APIs in action.
+      </p>
+      <a href="/dashboard/" class="btn btn-primary">Go to Dashboard</a>
+    </div>
+  </section>
+</div>
+
+<style>
+  .about-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
+  }
+
+  .about-card h2 {
+    color: #ffd369;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
+  .about-card ul,
+  .about-card ol {
+    line-height: 2;
+  }
+
+  .about-card li {
+    margin-bottom: 10px;
+  }
+
+  .tech-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .tech-section h3 {
+    color: #00adb5;
+    margin-bottom: 15px;
+  }
+
+  .architecture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .arch-layer {
+    background: linear-gradient(135deg, #00adb5, #00d4ff);
+    padding: 20px;
+    border-radius: 8px;
+    min-width: 300px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .arch-layer strong {
+    display: block;
+    font-size: 1.1em;
+    margin-bottom: 8px;
+  }
+
+  .arch-layer p {
+    font-size: 0.9em;
+    opacity: 0.9;
+    margin: 0;
+  }
+
+  .arch-arrow {
+    font-size: 2em;
+    color: #ffd369;
+  }
+
+  .deployment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .deployment-option {
+    background: rgba(0, 173, 181, 0.1);
+    border: 1px solid #00adb5;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .deployment-option h3 {
+    margin-top: 0;
+    color: #00adb5;
+  }
+
+  .deployment-option .small {
+    font-size: 0.9em;
+    opacity: 0.8;
+    margin: 10px 0 0 0;
+  }
+
+  .getting-started pre {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+
+  .getting-started code {
+    font-family: "Courier New", monospace;
+    font-size: 0.85em;
+  }
+
+  .features-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+  }
+
+  .feature-item {
+    padding: 12px;
+    background: rgba(0, 173, 181, 0.05);
+    border-left: 3px solid #ffd369;
+    border-radius: 4px;
+  }
+
+  .about-card.cta {
+    text-align: center;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 173, 181, 0.2),
+      rgba(255, 211, 105, 0.1)
+    );
+  }
+
+  .about-card.cta .btn {
+    margin-top: 20px;
+  }
+</style>
+{% endblock %}

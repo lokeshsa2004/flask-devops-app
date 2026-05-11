@@ -1,0 +1,144 @@
+{% extends "base.html" %} {% block title %}Home - Flask DevOps App{% endblock %}
+{% block content %}
+<div class="container">
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Flask App Deployment on Ubuntu VM using AWS</h1>
+      <p class="hero-subtitle">
+        Production-grade Flask application with Gunicorn, Nginx, Docker, and
+        CI/CD
+      </p>
+      <div class="hero-buttons">
+        <a href="/dashboard/" class="btn btn-primary">View Dashboard</a>
+        <a href="/dashboard/about" class="btn btn-secondary">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Project Goal</h3>
+        <ul class="feature-list">
+          <li>Deploy Flask on Ubuntu VM</li>
+          <li>Gunicorn application server</li>
+          <li>Nginx reverse proxy</li>
+          <li>Ensure reboot persistence</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🏗️</div>
+        <h3>Architecture</h3>
+        <div class="architecture-flow">
+          <span class="badge">Browser</span>
+          <span class="arrow">→</span>
+          <span class="badge">IP</span>
+          <span class="arrow">→</span>
+          <span class="badge">Nginx:80</span>
+          <span class="arrow">→</span>
+          <span class="badge">Gunicorn:8000</span>
+          <span class="arrow">→</span>
+          <span class="badge">Flask</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <h3>Key Steps</h3>
+        <ul class="feature-list">
+          <li>VM setup and updates</li>
+          <li>Python virtual environment</li>
+          <li>Flask development</li>
+          <li>Gunicorn + systemd</li>
+          <li>Nginx proxy config</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>Results</h3>
+        <ul class="feature-list">
+          <li>Public IP and domain access</li>
+          <li>Only Nginx exposed</li>
+          <li>Gunicorn on localhost</li>
+          <li>Survives reboot</li>
+          <li>Mobile friendly</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🐳</div>
+        <h3>Docker Support</h3>
+        <ul class="feature-list">
+          <li>Docker container builds</li>
+          <li>Docker Compose orchestration</li>
+          <li>Health checks</li>
+          <li>Volume management</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>CI/CD Pipeline</h3>
+        <ul class="feature-list">
+          <li>GitHub Actions workflow</li>
+          <li>Automated testing</li>
+          <li>GHCR image builds</li>
+          <li>EC2 auto-deployment</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="info-section">
+    <div class="info-card">
+      <h2>🚀 Get Started</h2>
+      <p>
+        View the <strong>Dashboard</strong> to see user management in action
+        with real-time database connectivity, or explore the
+        <strong>API</strong> for integration possibilities.
+      </p>
+    </div>
+  </section>
+
+  <section class="tech-stack">
+    <h2>Technology Stack</h2>
+    <div class="tech-grid">
+      <div class="tech-item">
+        <span class="tech-icon">🐍</span>
+        <span class="tech-name">Python 3.11</span>
+      </div>
+      <div class="tech-item">
+        <span class="tech-icon">⚡</span>
+        <span class="tech-name">Flask 2.3+</span>
+      </div>
+      <div class="tech-item">
+        <span class="tech-icon">🔗</span>
+        <span class="tech-name">SQLAlchemy ORM</span>
+      </div>
+      <div class="tech-item">
+        <span class="tech-icon">🗄️</span>
+        <span class="tech-name">MySQL Database</span>
+      </div>
+      <div class="tech-item">
+        <span class="tech-icon">🚀</span>
+        <span class="tech-name">Gunicorn WSGI</span>
+      </div>
+      <div class="tech-item">
+        <span class="tech-icon">📦</span>
+        <span class="tech-name">Nginx Reverse Proxy</span>
+      </div>
+      <div class="tech-item">
+        <span class="tech-icon">🐳</span>
+        <span class="tech-name">Docker & Compose</span>
+      </div>
+      <div class="tech-item">
+        <span class="tech-icon">🔄</span>
+        <span class="tech-name">GitHub Actions</span>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

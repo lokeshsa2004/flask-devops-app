@@ -16,7 +16,23 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.9', '3.10', '3.11']
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: flask_db
+          MYSQL_USER: flask_user
+          MYSQL_PASSWORD: flask_password
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        ports:
+          - 3306:3306
 
     steps:
       - name: Checkout Code
@@ -34,12 +50,18 @@ jobs:
           pip install pytest pytest-cov
 
       - name: Run Pytest Tests
+        env:
+          DATABASE_URL: mysql+pymysql://flask_user:flask_password@localhost:3306/flask_db
+          FLASK_ENV: testing
         run: |
           pytest tests/test_app.py -v --tb=short
 
       - name: Generate Coverage Report
+        env:
+          DATABASE_URL: mysql+pymysql://flask_user:flask_password@localhost:3306/flask_db
+          FLASK_ENV: testing
         run: |
-          pytest tests/test_app.py --cov=. --cov-report=xml --cov-report=html
+          pytest tests/test_app.py --cov=app --cov-report=xml --cov-report=html
 
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -70,7 +92,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install Linting Tools
         run: |
@@ -79,15 +101,15 @@ jobs:
 
       - name: Check Code Style with Black
         run: |
-          black --check .
+          black --check app/ tests/
 
       - name: Check Import Sorting with isort
         run: |
-          isort --check-only .
+          isort --check-only app/ tests/
 
       - name: Lint with Flake8
         run: |
-          flake8 app.py tests/ --max-line-length=100 --ignore=E501,W503 > flake8-report.txt || true
+          flake8 app/ tests/ --max-line-length=100 --ignore=E501,W503 > flake8-report.txt || true
 
       - name: Upload Lint Reports
         if: always()

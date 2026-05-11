@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Flask DevOps App{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <a href="/" class="logo">
+            <span class="logo-icon">⚙️</span>
+            <span class="logo-text">Flask DevOps</span>
+          </a>
+        </div>
+        <ul class="nav-menu">
+          <li><a href="/" class="nav-link">Home</a></li>
+          <li><a href="/dashboard/" class="nav-link">Dashboard</a></li>
+          <li><a href="/dashboard/about" class="nav-link">About</a></li>
+          <li><a href="/api/health" class="nav-link">Health</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">{% block content %}{% endblock %}</main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <p>
+          &copy; 2024 Flask DevOps Application. Deployed with
+          <strong>Flask • Gunicorn • Nginx • Docker</strong>
+        </p>
+        <p>
+          Built for production-grade cloud deployments on AWS EC2, systemd, and
+          container orchestration
+        </p>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

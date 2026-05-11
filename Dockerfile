@@ -6,12 +6,16 @@ RUN useradd -m -u 1000 appuser
 WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    FLASK_ENV=production
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+
+# Create necessary directories
+RUN mkdir -p logs && chown -R appuser:appuser /app
 
 # Set ownership to non-root user
 RUN chown -R appuser:appuser /app
@@ -22,6 +26,6 @@ EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/').status" || exit 1
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/').getcode() == 200" || exit 1
 
 CMD ["gunicorn", "-w", "3", "-b", "0.0.0.0:8000", "--access-logfile", "-", "--error-logfile", "-", "app:app"]

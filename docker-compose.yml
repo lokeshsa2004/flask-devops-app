@@ -1,6 +1,29 @@
 version: '3.8'
 
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-flask_db}
+      MYSQL_USER: ${MYSQL_USER:-flask_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-flask_password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+    command: --default-authentication-plugin=mysql_native_password
+
   flask-app:
     image: ${APP_IMAGE:-ghcr.io/lokeshsa2004/flask-devops-app:latest}
     container_name: flask-app
@@ -10,14 +33,21 @@ services:
     environment:
       - FLASK_ENV=${FLASK_ENV:-production}
       - PYTHONUNBUFFERED=1
+      - DATABASE_URL=mysql+pymysql://${MYSQL_USER:-flask_user}:${MYSQL_PASSWORD:-flask_password}@mysql:3306/${MYSQL_DATABASE:-flask_db}
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+    depends_on:
+      mysql:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/').status"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/').getcode() == 200"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 5s
     networks:
       - app-network
+    volumes:
+      - ./logs:/app/logs
 
   nginx:
     image: nginx:latest
@@ -32,7 +62,16 @@ services:
       - flask-app
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

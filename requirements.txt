@@ -1,2 +1,7 @@
 flask>=2.3,<4
 gunicorn>=21,<23
+flask-sqlalchemy>=3.0,<4
+flask-migrate>=4.0,<5
+pymysql>=1.0,<2
+python-dotenv>=1.0,<2
+cryptography>=40,<43
