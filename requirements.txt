@@ -3,4 +3,6 @@ gunicorn>=21,<23
 flask-sqlalchemy>=3.1,<4
 sqlalchemy>=2.0,<3
 pymysql>=1.1,<2
+cryptography>=42,<45
+# ^ PyMySQL needs this for MySQL 8 default auth (caching_sha2_password)
 python-dotenv>=1.0,<2
