@@ -1,65 +1,38 @@
-# Flask DevOps App
+# StackForge Showcase (Flask full-stack demo)
 
-Minimal Flask app with production-style deployment options:
-- Gunicorn
-- Nginx
-- Systemd (VM/bare-metal)
-- Docker / Docker Compose
+This repository is a **small full-stack sample** named **StackForge Showcase**:
 
-## What’s in this repo
+- **Backend**: Flask + SQLAlchemy + **MySQL** (via **PyMySQL**)
+- **Frontend**: Jinja templates + static **CSS** + a little **JavaScript** (theme toggle + JSON grid)
+- **Assets**: PNG placeholders under `static/img/` (generated in Docker builds via `scripts/generate_placeholders.py`)
+- **Ops**: Docker / Docker Compose (**MySQL + Flask + Nginx**), GitHub Actions CI/CD, optional EC2 deploy
 
-- **App**: `app.py` (single route `/`)
-- **Tests**: `tests/test_app.py`
-- **Docker**: `Dockerfile`
-- **Docker Compose**: `docker-compose.yml` + `nginx.conf`
-- **VM deployment configs**: `config/systemd/flask_app.service`, `config/nginx/flask_app`
+## Quick links
 
-## Quickstart (recommended)
+- **Runbook / deploy details**: `docs/INSTRUCTIONS.md`
+- **App factory + routes**: `showcase/`
+- **WSGI entrypoint**: `app.py` (`gunicorn app:app`)
 
-See `docs/INSTRUCTIONS.md` for the full instructions (local, Docker, Compose, EC2, CI/CD).
-
-## Local (virtualenv)
+## Local quickstart (SQLite by default)
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-gunicorn -w 3 -b 127.0.0.1:8000 app:app
+python scripts/generate_placeholders.py
+flask --app app init-db
+pytest -q
+flask --app app run --debug
 ```
 
-Open `http://127.0.0.1:8000`.
-
-## Docker: build + run locally
-
-Build the image:
+## Docker Compose (recommended: MySQL + app + Nginx)
 
 ```bash
-docker build -t flask-devops-app:local .
+docker compose up -d --build
 ```
 
-Run the container (app listens on port 8000 in the container):
+Open `http://localhost/` (Nginx → Flask).
 
-```bash
-docker run --rm -p 8000:8000 flask-devops-app:local
-```
+## CI/CD
 
-Open in browser:
-
-`http://localhost:8000`
-
-## Docker Compose (Nginx container + app container)
-
-This repo also supports a 2-container layout:
-
-Browser → **Nginx (container, port 80)** → **Flask+Gunicorn (container, port 8000)**.
-
-Run locally:
-
-```bash
-export APP_IMAGE=flask-devops-app:local
-docker compose up -d
-```
-
-Open:
-
-`http://localhost/`
+See `.github/workflows/ci.yml` (tests + lint + Docker publish + Compose-based EC2 deploy).

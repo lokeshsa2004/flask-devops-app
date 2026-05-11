@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}StackForge Showcase · Home{% endblock %}
+{% block body %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">Context</p>
+    <h1>StackForge Showcase</h1>
+    <p class="lede">
+      A small full-stack sample: catalog rows live in <strong>MySQL</strong>, pages are rendered with
+      <strong>Flask</strong> templates, the UI adds a bit of <strong>JavaScript</strong> for polish,
+      and images ship from <code>/static/img</code> behind <strong>Nginx</strong> in Compose.
+    </p>
+    <ul class="bullets">
+      <li>Python connects with <code>SQLAlchemy</code> + <code>PyMySQL</code></li>
+      <li><code>/api/items</code> exposes JSON for the live grid below</li>
+      <li><code>/api/health</code> reports database readiness</li>
+    </ul>
+  </div>
+  <div class="hero-art">
+    <img src="{{ hero_image }}" alt="Abstract stack illustration" width="360" height="220" loading="eager">
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <h2>From the database</h2>
+    <p class="muted">Server-rendered cards (Jinja). Same data is mirrored via JavaScript.</p>
+  </div>
+  <div class="grid">
+    {% for item in items %}
+    <article class="card">
+      <div class="card-media">
+        <img src="{{ url_for('static', filename='img/' + item.image_key) }}" alt="" width="320" height="160" loading="lazy">
+      </div>
+      <div class="card-body">
+        {% if item.badge %}
+        <span class="chip">{{ item.badge }}</span>
+        {% endif %}
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.summary }}</p>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <h2>Live from <code>/api/items</code></h2>
+    <button type="button" id="refresh-api" class="btn">Refresh JSON grid</button>
+  </div>
+  <div id="js-grid" class="grid" aria-live="polite"></div>
+  <pre id="api-raw" class="code-block" hidden></pre>
+</section>
+{% endblock %}

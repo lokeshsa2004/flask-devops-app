@@ -5,9 +5,9 @@ After=network.target
 [Service]
 User=ubuntu
 Group=www-data
-WorkingDirectory=/home/ubuntu/flask_app
-Environment="PATH=/home/ubuntu/flask_app/venv/bin"
-ExecStart=/home/ubuntu/flask_app/venv/bin/gunicorn \
+WorkingDirectory=/home/ubuntu/flask-devops-app
+Environment="PATH=/home/ubuntu/flask-devops-app/venv/bin"
+ExecStart=/home/ubuntu/flask-devops-app/venv/bin/gunicorn \
 	-w 3 \
 	-b 127.0.0.1:8000 \
 	app:app

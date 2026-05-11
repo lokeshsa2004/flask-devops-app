@@ -13,8 +13,6 @@ venv
 .venv
 *.env
 *.pem
-README.md
-DEPLOYMENT_GUIDE.md
 tests/
 .gitignore
 .editorconfig

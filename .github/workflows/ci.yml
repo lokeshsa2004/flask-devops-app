@@ -14,9 +14,29 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: stackforge_ci
+          MYSQL_USER: app
+          MYSQL_PASSWORD: app
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=8s
+          --health-timeout=5s
+          --health-retries=20
+
     strategy:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11']
+
+    env:
+      DATABASE_URL: mysql+pymysql://app:app@127.0.0.1:3306/stackforge_ci
+      FLASK_APP: app
 
     steps:
       - name: Checkout Code
@@ -32,6 +52,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-cov
+
+      - name: Wait for MySQL
+        run: |
+          python docker/wait_for_mysql.py
+
+      - name: Initialize database
+        run: |
+          flask init-db
 
       - name: Run Pytest Tests
         run: |
@@ -87,7 +115,7 @@ jobs:
 
       - name: Lint with Flake8
         run: |
-          flake8 app.py tests/ --max-line-length=100 --ignore=E501,W503 > flake8-report.txt || true
+          flake8 app.py showcase tests --max-line-length=100 --ignore=E501,W503 > flake8-report.txt || true
 
       - name: Upload Lint Reports
         if: always()
@@ -190,14 +218,14 @@ jobs:
           git fetch origin master
           git reset --hard origin/master
 
-          echo "Pulling latest app image..."
-          sudo APP_IMAGE="$APP_IMAGE" docker compose pull flask-app
+          echo "Pulling latest images..."
+          sudo APP_IMAGE="$APP_IMAGE" docker compose pull
 
-          echo "Starting stack (nginx -> app)..."
+          echo "Starting stack (db -> app -> nginx)..."
           sudo APP_IMAGE="$APP_IMAGE" docker compose up -d --remove-orphans
 
           echo "Health check..."
-          for i in {1..15}; do
+          for i in {1..45}; do
             if curl -fsS http://127.0.0.1/ >/dev/null; then
               echo "✓ App is responding on port 80"
               exit 0
@@ -222,6 +250,8 @@ jobs:
             && echo "✓ Nginx container is running" || echo "✗ Nginx container is NOT running"
           sudo docker ps --filter "name=flask-app" --format '{{.Names}}' | grep -q flask-app \
             && echo "✓ App container is running" || echo "✗ App container is NOT running"
+          sudo docker ps --filter "name=stackforge-db" --format '{{.Names}}' | grep -q stackforge-db \
+            && echo "✓ MySQL container is running" || echo "✗ MySQL container is NOT running"
 
           # Check app endpoint via port 80
           response=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1/)
