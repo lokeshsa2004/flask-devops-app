@@ -228,14 +228,17 @@ jobs:
           for i in {1..45}; do
             if curl -fsS http://127.0.0.1/ >/dev/null; then
               echo "✓ App is responding on port 80"
-              exit 0
+              HEALTH_OK=1
+              break
             fi
             sleep 1
           done
 
-          echo "✗ App did not become healthy in time"
-          sudo docker compose logs --tail=200 || true
-          exit 1
+          if [ $HEALTH_OK -eq 0 ]; then
+            echo "✗ App did not become healthy in time"
+            sudo docker compose logs --tail=200 || true
+            exit 1
+          fi
 
           EOF
 
